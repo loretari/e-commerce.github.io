@@ -84,7 +84,7 @@ class UI {
                 // console.log(cartItem)
                 // add product to the cart
                 cart = [...cart, cartItem]
-                console.log(cart)
+                // console.log(cart)
                 // save cart in local storage
                 Storage.saveCart(cart)
                 //  set cart values
@@ -154,14 +154,38 @@ cartLogic() {
                 // console.log(removeItem.parentElement.parentElement);
                cartContent.removeChild(removeItem.parentElement.parentElement);
                this.removeItem(id);
+            } else if(event.target.classList.contains("fa-chevron-up")) {
+let addAmount = event.target
+                let id = addAmount.dataset.id
+                // console.log(addAmount);
+                let tempItem = cart.find((item) => item.id === id);
+tempItem.amount = tempItem.amount + 1;
+Storage.saveCart(cart);
+this.setCartValues(cart);
+addAmount.nextElementSibling.innerText = tempItem.amount;
+            } else if(event.target.classList.contains("fa-chevron-down"))  {
+                let lowerAmount = event.target;
+                let id = lowerAmount.dataset.id;
+                let tempItem = cart.find((item) => item.id === id)
+                tempItem.amount = tempItem.amount - 1;
+                if (tempItem.amount > 0) {
+                    Storage.saveCart(cart);
+                    this.setCartValues(cart);
+                    lowerAmount.previousElementSibling.innerText = tempItem.amount;
+                } else {
+                    cartContent.removeChild(lowerAmount.parentElement.parentElement)
+                    this.removeItem(id);
+                }
             }
+
+
         })
     })
 }
 clearCart() {
         let cartItems = cart.map((item) => item.id)
           // console.log(cartItems)
-    console.log(cartContent.children);
+    // console.log(cartContent.children);
 cartItems.forEach((id) => this.removeItem(id));
         while (cartContent.children.length > 0) {
             cartContent.removeChild(cartContent.children[0]);
