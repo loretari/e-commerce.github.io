@@ -53,7 +53,7 @@ class UI {
             />
             <button class="bag-btn" data-id=${product.id}>
               <i class="fas fa-shopping-cart"></i>
-              add to bag
+              add to cart
             </button>
           </div>
           <h3>${product.title}</h3>
@@ -131,15 +131,45 @@ cartItems.innerText = itemsTotal;
         this.setCartValues(cart);
         this.populateCart(cart);
         cartBtn.addEventListener("click", this.showCart);
-        closeCartBtn.addEventListener("click", this.hidecart);
+        closeCartBtn.addEventListener("click", this.hideCart);
     }
     populateCart(cart) {
         cart.forEach((item) => this.addCartItem(item))
     }
-hidecart() {
+hideCart() {
     cartOverlay.classList.remove("transparentBcg");
     cartDOM.classList.remove("showCart");
+}
+cartLogic() {
+//        clear cart button
+    clearCartBtn.addEventListener("click", () => {
+        this.clearCart()
+    //    cart functionality
+    })
+}
+clearCart() {
+        let cartItems = cart.map((item) => item.id)
+          // console.log(cartItems)
+    console.log(cartContent.children);
+cartItems.forEach((id) => this.removeItem(id));
+        while (cartContent.children.length > 0) {
+            cartContent.removeChild(cartContent.children[0]);
+        }
+        this.hideCart();
 
+}
+removeItem(id) {
+      cart = cart.filter((item) => item.id !== id)
+    this.setCartValues(cart);
+      Storage.saveCart(cart);
+      let button = this.getSingleButton(id);
+button.disabled = false;
+button.innerHTML = ` <i class="fas fa-shopping-cart"></i>
+              add to cart`;
+
+}
+getSingleButton(id) {
+        return buttonsDOM.find((button) => button.dataset.id === id)
 }
 }
 
@@ -172,10 +202,11 @@ document.addEventListener("DOMContentLoaded", () => {
     products
         .getProducts()
         .then((products) => {
-            ui.displayProducts(products)
-            Storage.saveProducts(products)
+            ui.displayProducts(products);
+            Storage.saveProducts(products);
         })
         .then(() => {
-            ui.getBagButtons()
+            ui.getBagButtons();
+            ui.cartLogic();
         })
 })
