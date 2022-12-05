@@ -145,6 +145,17 @@ cartLogic() {
     clearCartBtn.addEventListener("click", () => {
         this.clearCart()
     //    cart functionality
+        cartContent.addEventListener("click", (event) => {
+            // console.log(event.target);
+            if (event.target.classList.contains("remove-item")) {
+                let removeItem = event.target;
+                // console.log(removeItem);
+                let id = removeItem.dataset.id;
+                // console.log(removeItem.parentElement.parentElement);
+               cartContent.removeChild(removeItem.parentElement.parentElement);
+               this.removeItem(id);
+            }
+        })
     })
 }
 clearCart() {
